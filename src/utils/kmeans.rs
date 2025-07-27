@@ -1,5 +1,5 @@
 use super::*;
-use rand::seq::SliceRandom;
+use rand::seq::IndexedRandom;
 use rand::Rng;
 use std::cmp::min;
 use std::rc::Rc;
@@ -91,7 +91,7 @@ impl KMeans {
     }
 
     fn initialize_centroids(&self, vectors: Vectors) -> Vec<Vector> {
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         let mut centroids = Vec::with_capacity(self.n_clusters);
 
         // Pick the first centroid randomly.
@@ -115,7 +115,7 @@ impl KMeans {
 
             // Choose the next centroid with probability proportional
             // to the squared distance.
-            let threshold = rng.gen::<f64>() * distances.iter().sum::<f64>();
+            let threshold = rng.random::<f64>() * distances.iter().sum::<f64>();
             let mut cumulative_sum = 0.0;
 
             for (i, distance) in distances.iter().enumerate() {
@@ -150,7 +150,7 @@ impl KMeans {
         for i in 0..self.n_clusters {
             // If the cluster is empty, reinitialize the centroid.
             if cluster_count[i] == 0 {
-                let mut rng = rand::thread_rng();
+                let mut rng = rand::rng();
                 centroids[i] = vectors.choose(&mut rng).unwrap().to_vec();
                 continue;
             }
@@ -183,9 +183,9 @@ impl KMeans {
             .unwrap()
     }
 
-    /// Returns index-mapped cluster assignment for each data point.
+    /// Returns index-mapped cluster assignment for each data's point.
     ///
-    /// The index corresponds to the data point index and the value corresponds
+    /// The index corresponds to the data's point index and the value corresponds
     /// to the cluster index. For example, given the following assignments:
     ///
     /// ```text
