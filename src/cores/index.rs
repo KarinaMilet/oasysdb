@@ -1,5 +1,5 @@
 use super::*;
-use std::cmp::{min, Ordering};
+use std::cmp::{Ordering, min};
 use std::collections::BinaryHeap;
 use std::rc::Rc;
 

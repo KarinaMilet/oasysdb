@@ -16,7 +16,7 @@ prost = "0.13.1"
 
 # Serialization-related dependencies
 serde = { version = "1.0.208", features = ["derive"] }
-bincode = "1.3.3"
+bincode = {version = "2.0.1", default-features = false, features = ["serde", "std"]}
 
 # Parallelism-related dependencies
 simsimd = "6.5.0"

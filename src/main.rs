@@ -3,7 +3,7 @@ mod protos;
 mod types;
 mod utils;
 
-use clap::{arg, ArgMatches, Command};
+use clap::{ArgMatches, Command, arg};
 use cores::{Database, Parameters};
 use dotenv::dotenv;
 use protos::database_server::DatabaseServer;
@@ -55,9 +55,11 @@ async fn start_handler(args: &ArgMatches) {
     let db = Arc::new(Database::open().expect("Failed to open the database"));
 
     let db_clone = db.clone();
-    thread::spawn(move || loop {
-        thread::sleep(SNAPSHOT_INTERVAL);
-        db_clone.create_snapshot().expect("Failed to create a snapshot");
+    thread::spawn(move || {
+        loop {
+            thread::sleep(SNAPSHOT_INTERVAL);
+            db_clone.create_snapshot().expect("Failed to create a snapshot");
+        }
     });
 
     tracing::info!("Database server is ready on port {port}");

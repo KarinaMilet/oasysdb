@@ -1,6 +1,6 @@
 use super::*;
-use rand::seq::IndexedRandom;
 use rand::Rng;
+use rand::seq::IndexedRandom;
 use std::cmp::min;
 use std::rc::Rc;
 

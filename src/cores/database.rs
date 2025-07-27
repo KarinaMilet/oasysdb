@@ -148,8 +148,9 @@ impl Database {
         path: impl AsRef<Path>,
     ) -> Result<T, Box<dyn Error>> {
         let file = OpenOptions::new().read(true).open(path)?;
-        let reader = BufReader::new(file);
-        Ok(bincode::deserialize_from(reader)?)
+        let mut reader = BufReader::new(file);
+        let config = bincode::config::standard();
+        Ok(bincode::serde::decode_from_std_read(&mut reader, config)?)
     }
 
     fn persist_as_binary<T: Serialize>(
@@ -165,8 +166,9 @@ impl Database {
             .truncate(true)
             .open(&tmp_file)?;
 
-        let writer = BufWriter::new(file);
-        bincode::serialize_into(writer, &data)?;
+        let mut writer = BufWriter::new(file);
+        let config = bincode::config::standard();
+        bincode::serde::encode_into_std_write(&data, &mut writer, config)?;
         fs::rename(&tmp_file, &path)?;
         Ok(())
     }
